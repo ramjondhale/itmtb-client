@@ -4,6 +4,7 @@ import { useForm, Form } from "./common/useForm";
 import Notification from "./common/Notification";
 import Controls from "./controls/Controls";
 import axios from "axios";
+import validateForm from "./FormValidation";
 
 //Option values for radio button
 const radioOptions = [
@@ -32,12 +33,20 @@ const instrumentOptions = [
   { id: "VODAFONE IDEA", title: "VODAFONE IDEA" },
 ];
 
+//Options values for Strike Price dropdown
+const strikePriceOptions = [
+  { id: 2000, title: "2000" },
+  { id: 3000, title: "3000" },
+  { id: 4000, title: "4000" },
+];
+
 //Initial states
 const currentDate = new Date();
 const initialFieldValues = {
   productName: "",
   radioOptions: "ce",
   expiry: "",
+  strikePrice: "",
   buyOrSell: "buy",
   movingOrClosing: "moving",
   instrument: "",
@@ -52,8 +61,8 @@ const initialFieldValues = {
 
 const useStyles = makeStyles((theme) => ({
   pageContent: {
-    margin: theme.spacing(5),
-    padding: theme.spacing(3),
+    margin: theme.spacing(3),
+    padding: theme.spacing(2),
   },
 }));
 
@@ -65,14 +74,21 @@ export default function CreateRecommendation() {
     message: "",
     type: "",
   });
+  const validate = (fieldValues, type = "onChange") => {
+    const temp = validateForm(fieldValues, errors);
+    setErrors({
+      ...temp,
+    });
+    if (type === "onSubmit") return Object.values(temp).every((x) => x === "");
+  };
   const {
     values,
     errors,
     handleInputChange,
     handleSelection,
     resetForm,
-    validate,
-  } = useForm(initialFieldValues, false);
+    setErrors,
+  } = useForm(initialFieldValues, validate, true);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -126,6 +142,16 @@ export default function CreateRecommendation() {
                 value={values.radioOptions}
                 onChange={handleInputChange}
                 items={radioOptions}
+              />
+            )}
+            {values.productName === "options" && (
+              <Controls.Select
+                name='strikePrice'
+                label='Strike Price'
+                value={values.strikePrice}
+                onChange={handleInputChange}
+                error={errors.strikePrice}
+                options={strikePriceOptions}
               />
             )}
             <Typography variant='subtitle1'>
@@ -183,6 +209,7 @@ export default function CreateRecommendation() {
               value={values.tradePrice}
               onChange={handleInputChange}
               error={errors.tradePrice}
+              type='number'
             />
             <Controls.Input
               name='stopLoss'
@@ -190,6 +217,7 @@ export default function CreateRecommendation() {
               value={values.stopLoss}
               onChange={handleInputChange}
               error={errors.stopLoss}
+              type='number'
             />
             <Controls.Input
               name='target'
@@ -197,6 +225,7 @@ export default function CreateRecommendation() {
               value={values.target}
               onChange={handleInputChange}
               error={errors.target}
+              type='number'
             />
             <Controls.Input
               name='quantity'
@@ -204,6 +233,7 @@ export default function CreateRecommendation() {
               value={values.quantity}
               onChange={handleInputChange}
               error={errors.quantity}
+              type='number'
             />
             <Controls.DatePicker
               name='recValidity'
