@@ -44,7 +44,7 @@ const strikePriceOptions = [
 const currentDate = new Date();
 const initialFieldValues = {
   productName: "",
-  radioOptions: "ce",
+  radioOptions: "",
   expiry: "",
   strikePrice: "",
   buyOrSell: "buy",
@@ -74,13 +74,16 @@ export default function CreateRecommendation() {
     message: "",
     type: "",
   });
-  const validate = (fieldValues, type = "onChange") => {
-    const temp = validateForm(fieldValues, errors);
+
+  //function for validating user input
+  const validate = (fieldValues, type = "onChange", fvalues = values) => {
+    const temp = validateForm(fieldValues, errors, fvalues);
     setErrors({
       ...temp,
     });
     if (type === "onSubmit") return Object.values(temp).every((x) => x === "");
   };
+
   const {
     values,
     errors,

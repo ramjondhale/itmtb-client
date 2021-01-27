@@ -17,6 +17,7 @@ export function useForm(
     });
     if (validateOnChange) validate({ [name]: value });
   };
+
   //function handle selection in button group
   const handleSelection = (name, value) => {
     setValues({
@@ -29,7 +30,6 @@ export function useForm(
     setValues(initialFieldValues);
     setErrors({});
   };
-  //Custom Validation for form input
 
   return {
     values,

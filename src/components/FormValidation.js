@@ -1,16 +1,13 @@
-const validateForm = (fieldValues, errors) => {
+const validateForm = (fieldValues, errors, values) => {
   let temp = { ...errors };
   if ("productName" in fieldValues)
     temp.productName = fieldValues.productName ? "" : "This field is required";
   if ("expiry" in fieldValues)
-    if (
-      fieldValues.productName === "options" ||
-      fieldValues.productName === "futures"
-    ) {
+    if (values.productName === "options" || values.productName === "futures") {
       temp.expiry = fieldValues.expiry ? "" : "This field is required";
     }
   if ("strikePrice" in fieldValues)
-    if (fieldValues.productName === "options") {
+    if (values.productName === "options") {
       temp.strikePrice = fieldValues.strikePrice
         ? ""
         : "This field is required";
@@ -44,12 +41,12 @@ const validateForm = (fieldValues, errors) => {
       const stopLoss = parseInt(fieldValues.stopLoss);
       if (stopLoss <= 0)
         temp.stopLoss = "Trade Price should be greater than zero";
-      else if (fieldValues.buyOrSell === "buy") {
-        if (stopLoss >= fieldValues.tradePrice)
+      else if (values.buyOrSell === "buy") {
+        if (stopLoss >= values.tradePrice)
           temp.stopLoss = "Stop Loss should be smaller than trade price";
         else temp.stopLoss = "";
       } else {
-        if (stopLoss <= fieldValues.tradePrice)
+        if (stopLoss <= values.tradePrice)
           temp.stopLoss = "Stop Loss should be larger than trade price";
         else temp.stopLoss = "";
       }
@@ -59,12 +56,12 @@ const validateForm = (fieldValues, errors) => {
     if (fieldValues.target) {
       const target = parseInt(fieldValues.target);
       if (target <= 0) temp.target = "Target should be greater than zero";
-      else if (fieldValues.buyOrSell === "buy") {
-        if (target <= fieldValues.tradePrice)
+      else if (values.buyOrSell === "buy") {
+        if (target <= values.tradePrice)
           temp.target = "Target should be larger than trade price";
         else temp.target = "";
       } else {
-        if (target >= fieldValues.tradePrice)
+        if (target >= values.tradePrice)
           temp.target = "Target should be smaller than trade price";
         else temp.target = "";
       }
